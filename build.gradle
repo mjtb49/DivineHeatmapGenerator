@@ -1,0 +1,24 @@
+plugins {
+    id 'java'
+}
+
+sourceCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+
+    maven {
+        url "https://jitpack.io"
+    }
+}
+
+repositories {
+    mavenCentral()
+    maven {
+        url "https://jitpack.io"
+    }
+}
+dependencies {
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+    implementation 'com.github.hube12:SEED:645bd5bf5fbf34bd4a009619936b7a8e0d43302f'
+}
