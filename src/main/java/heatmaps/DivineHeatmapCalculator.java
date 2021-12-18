@@ -35,7 +35,7 @@ public class DivineHeatmapCalculator {
         double[][] heatMap = new double[SIDE_LENGTH][SIDE_LENGTH];
         int total = 0;
         int successes = 0;
-        while (successes < sampleSize && total < maxNumSeeds && !(total > 1000000 && successes == 0)) {
+        while (successes < sampleSize && total < maxNumSeeds && !(total > 10_000_000 && successes == 0)) {
             long seed = new Random().nextLong();
             total++;
             if (testConditions(conditions, seed)) {
@@ -109,9 +109,9 @@ public class DivineHeatmapCalculator {
     }
 
     private static Color computeGradient(double max, double pixel) {
-        int numColors = 8;
+        int numColors = 255;
         int divisor = 256 / numColors;
-        int intensity = (int) (255 * pixel / max) / divisor * divisor + 15;
+        int intensity = (int) (255 * pixel / max) / divisor * divisor;
         return new Color(intensity,intensity,intensity);
     }
 
