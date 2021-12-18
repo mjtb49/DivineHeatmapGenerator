@@ -1,0 +1,29 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="DivineHeatmapGenerator.main:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/DivineHeatmapGenerator_main_jar</output-path>
+    <root id="archive" name="DivineHeatmapGenerator.main.jar">
+      <element id="directory" name="META-INF">
+        <element id="file-copy" path="$PROJECT_DIR$/src/main/java/META-INF/MANIFEST.MF" />
+      </element>
+      <element id="module-output" name="DivineHeatmapGenerator.main" />
+      <element id="extracted-dir" path="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-stdlib-jdk7/1.5.0-RC/98412f5e174aa9a92172c90a1f46e9a6b7012cf8/kotlin-stdlib-jdk7-1.5.0-RC.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.github.KaptainWutax/NoiseUtils/49d64c336a099086c627d2391760134ebd81292f/5ecf243dca071555faac5898f814e0c1d2e4eb14/NoiseUtils-49d64c336a099086c627d2391760134ebd81292f.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.github.KaptainWutax/MathUtils/5531c4a87b0f1bb85d1dab2bdd18ce375400626a/8efbd0293f58d50f72a519eff2e7b62b1794fa9b/MathUtils-5531c4a87b0f1bb85d1dab2bdd18ce375400626a.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.github.hube12/SEED/645bd5bf5fbf34bd4a009619936b7a8e0d43302f/d97e56b21f8dff3e979f5aeb3113160bbe258a67/SEED-645bd5bf5fbf34bd4a009619936b7a8e0d43302f.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.github.KaptainWutax/FeatureUtils/0ad1cff9c95ff7f5c12df45367059ab9c08b700c/794a06b3912233141c7054653dc150eaf788ef83/FeatureUtils-0ad1cff9c95ff7f5c12df45367059ab9c08b700c.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.github.KaptainWutax/MCUtils/96545bc961eb5d51e18ec2b0cf6c5ce731899b0c/be3263eb51d8f0fa1dfdc4109a5d5172f2a27858/MCUtils-96545bc961eb5d51e18ec2b0cf6c5ce731899b0c.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$USER_HOME$/.gradle/caches/modules-2/files-2.1/net.lecousin/core/0.20.0/e2f4c2df39c634d8a8a8a43370d195df53f1eaf/core-0.20.0.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.github.KaptainWutax/ChunkRandomReversal/6b76fb5cf2cd438de56e6a46cea2a83985831834/179a99d118b7c05963b8100915dab316b0fb22a0/ChunkRandomReversal-6b76fb5cf2cd438de56e6a46cea2a83985831834.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.github.KaptainWutax/LattiCG/ec805b20bda95ead23216ab249a5ef5b8587e9e9/8467f5eb78e3f398f8dfeb5d81d5c2546d0f7b11/LattiCG-ec805b20bda95ead23216ab249a5ef5b8587e9e9.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-stdlib-jdk8/1.5.0-RC/329a01032f19ad6713f4f89f57b940e2b7f4b328/kotlin-stdlib-jdk8-1.5.0-RC.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.jetbrains/annotations/13.0/919f0dfe192fb4e063e7dacadee7f8bb9a2672a9/annotations-13.0.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.github.KaptainWutax/SeedUtils/b6a383113ce5d8d09a59e91b28ff064fb97c0709/66f37cdd30fe56c0639f27465f59d52b7b63327d/SeedUtils-b6a383113ce5d8d09a59e91b28ff064fb97c0709.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$USER_HOME$/.gradle/caches/modules-2/files-2.1/net.lecousin.compression/deflate/0.1.10/83d5ebe8669fac8a496e052bad2422618310c39e/deflate-0.1.10.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.github.KaptainWutax/TerrainUtils/5e0c4033bb97b5d5d6849fffe826fc32f05ec116/843787bcd335ddc90a3f1b611106fd2ea1d59a4e/TerrainUtils-5e0c4033bb97b5d5d6849fffe826fc32f05ec116.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.github.KaptainWutax/BiomeUtils/c0aa2f0e4974c2b4bc23e38f2ce503983ce4564d/25bd20ade9632581a1bafc0a24a4f2479b669ccb/BiomeUtils-c0aa2f0e4974c2b4bc23e38f2ce503983ce4564d.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-stdlib-common/1.5.0-RC/381fba17fba4081fda231f04b9c01910aee93b6d/kotlin-stdlib-common-1.5.0-RC.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-stdlib/1.5.0-RC/28dc6214ce77b23d5aedc0b025875ec3720097dd/kotlin-stdlib-1.5.0-RC.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$USER_HOME$/.gradle/caches/modules-2/files-2.1/net.lecousin.compression/gzip/0.1.10/f5b7b26a75544bfe4b6eac6236b7b326aeee26e1/gzip-0.1.10.jar" path-in-jar="/" />
+    </root>
+  </artifact>
+</component>

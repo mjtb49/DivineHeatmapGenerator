@@ -83,7 +83,7 @@ public class DivineHeatmapCalculator {
         int maxDSq = blockThreshold * blockThreshold / 256;
         double[][] kernel = new double[threshold * 2+ 1][ threshold * 2 + 1];
         for (int i = 0; i < threshold * 2 + 1; i++) for (int j = 0; j < threshold * 2 + 1; j++) {
-            if ((i - threshold) * (i - threshold) + (j - threshold) * (j - threshold) < maxDSq) {
+            if ((i - threshold) * (i - threshold) + (j - threshold) * (j - threshold) <= maxDSq) {
                 kernel[i][j] = 1;
             } else {
                 kernel[i][j] = 0;

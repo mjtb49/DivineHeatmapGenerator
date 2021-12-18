@@ -28,7 +28,7 @@ public class Main {
     static int treasureZ = Integer.MIN_VALUE;
     static int fossilValue = -1;
     static int portalValue = -1;
-    static int blockThreshold = 16;
+    static int blockThreshold = 0;
     static final BufferedImage defaultImage = DivineHeatmapCalculator.getHeatMapAsImage(DivineHeatmapCalculator.getSuccessProbabilityOfLocations(16, new ArrayList<>(), 100000));
     static JLabel heatMap = new JLabel(new ImageIcon(defaultImage));
     static JLabel output = new JLabel();
@@ -36,7 +36,7 @@ public class Main {
 
     public static void main(String[] args) {
         JFrame f =new JFrame();
-        f.setSize(SIDE_LENGTH,SIDE_LENGTH + 200);
+        f.setSize(SIDE_LENGTH + 50,SIDE_LENGTH + 200);
 
         FlowLayout flowLayout = new FlowLayout();
         f.setLayout(flowLayout);
@@ -44,7 +44,7 @@ public class Main {
         f.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
         JTextField distance = new JTextField("threshold");
-        distance.setSize(125,25);
+        distance.setColumns(4);
         distance.addFocusListener(new FocusAdapter() {
             public void focusGained(FocusEvent e) {
                 JTextField source = (JTextField)e.getComponent();
@@ -69,13 +69,13 @@ public class Main {
                     blockThreshold = Integer.parseInt(distance.getText());
                 } catch (NumberFormatException nfe) {
                     System.err.println(nfe.getMessage());
-                    blockThreshold = 16;
+                    blockThreshold = 0;
                 }
             }
         });
 
         JTextField xT = new JTextField("x");
-        xT.setSize(125,25);
+        xT.setColumns(3);
 
         xT.getDocument().addDocumentListener(new DocumentListener() {
             public void changedUpdate(DocumentEvent e) {
@@ -107,7 +107,7 @@ public class Main {
         });
 
         JTextField zT = new JTextField("z");
-        zT.setSize(125,25);
+        zT.setColumns(3);
         zT.addFocusListener(new FocusAdapter() {
             public void focusGained(FocusEvent e) {
                 JTextField source = (JTextField)e.getComponent();
@@ -137,7 +137,7 @@ public class Main {
         });
 
         JTextField fossil = new JTextField("fossil");
-        fossil.setSize(225, 25);
+        fossil.setColumns(6);
         fossil.addFocusListener(new FocusAdapter() {
             public void focusGained(FocusEvent e) {
                 JTextField source = (JTextField)e.getComponent();
@@ -160,6 +160,10 @@ public class Main {
             public void warn() {
                 try {
                     fossilValue = Integer.parseInt(fossil.getText());
+                    if (fossilValue < 0 || fossilValue > 15) {
+                        System.err.println("Tried and failed to set fossil to " + fossilValue);
+                        fossilValue = -1;
+                    }
                 } catch (NumberFormatException nfe) {
                     System.err.println(nfe.getMessage());
                     fossilValue = -1;
