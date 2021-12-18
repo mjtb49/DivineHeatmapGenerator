@@ -3,27 +3,20 @@ import Conditions.Condition;
 import Conditions.DecoratorCondition;
 import heatmaps.DivineHeatmapCalculator;
 
-import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
-import javax.swing.text.html.Option;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Optional;
 
 public class Main {
 
     final static int SIZE = 168 + 7;
     final static int SIDE_LENGTH = SIZE * 2 + 1;
-    static final int SAMPLE_SIZE = 100000;
+    static int sampleSize = 100000;
     static int treasureX = Integer.MIN_VALUE;
     static int treasureZ = Integer.MIN_VALUE;
     static int fossilValue = -1;
@@ -34,16 +27,8 @@ public class Main {
     static JLabel output = new JLabel();
 
 
-    public static void main(String[] args) {
-        JFrame f =new JFrame();
-        f.setSize(SIDE_LENGTH + 50,SIDE_LENGTH + 200);
-
-        FlowLayout flowLayout = new FlowLayout();
-        f.setLayout(flowLayout);
-
-        f.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-
-        JTextField distance = new JTextField("threshold");
+    private static JPanel makeSettingsPanel() {
+        JTextField distance = new JTextField("blocks");
         distance.setColumns(4);
         distance.addFocusListener(new FocusAdapter() {
             public void focusGained(FocusEvent e) {
@@ -74,6 +59,45 @@ public class Main {
             }
         });
 
+        JTextField samples = new JTextField("num trials");
+        samples.setColumns(4);
+        samples.addFocusListener(new FocusAdapter() {
+            public void focusGained(FocusEvent e) {
+                JTextField source = (JTextField)e.getComponent();
+                source.setText("");
+                source.removeFocusListener(this);
+            }
+        });
+
+        samples.getDocument().addDocumentListener(new DocumentListener() {
+            public void changedUpdate(DocumentEvent e) {
+                warn();
+            }
+            public void removeUpdate(DocumentEvent e) {
+                warn();
+            }
+            public void insertUpdate(DocumentEvent e) {
+                warn();
+            }
+
+            public void warn() {
+                try {
+                    sampleSize = Integer.parseInt(samples.getText());
+                } catch (NumberFormatException nfe) {
+                    System.err.println(nfe.getMessage());
+                    sampleSize = 100000;
+                }
+            }
+        });
+
+        JPanel settings = new JPanel();
+        settings.setBorder(BorderFactory.createTitledBorder("Settings"));
+        settings.add(distance);
+        settings.add(samples);
+        return settings;
+    }
+
+    private static JPanel makeTreasurePanel() {
         JTextField xT = new JTextField("x");
         xT.setColumns(3);
 
@@ -136,7 +160,16 @@ public class Main {
             }
         });
 
-        JTextField fossil = new JTextField("fossil");
+        JPanel treasure = new JPanel();
+        treasure.setBorder(BorderFactory.createTitledBorder("Treasure"));
+        treasure.add(xT);
+        treasure.add(zT);
+
+        return treasure;
+    }
+
+    private static JPanel makeFossilPanel() {
+        JTextField fossil = new JTextField("Fossil");
         fossil.setColumns(6);
         fossil.addFocusListener(new FocusAdapter() {
             public void focusGained(FocusEvent e) {
@@ -170,36 +203,14 @@ public class Main {
                 }
             }
         });
+        JPanel fossils = new JPanel();
+        fossils.setBorder(BorderFactory.createTitledBorder("Fossils"));
+        fossils.add(fossil);
 
-        JButton jButton = new JButton("Compute Heatmap");
-        //jButton.setSize(75,25);
-        jButton.addActionListener(e -> {
-            ArrayList<Condition> conds = new ArrayList<>();
-            if (treasureX != Integer.MIN_VALUE && treasureZ != Integer.MIN_VALUE) {
-                BuriedTreasureCondition buriedTreasureCondition = new BuriedTreasureCondition(treasureX, treasureZ);
-                conds.add(buriedTreasureCondition);
-            }
+        return  fossils;
+    }
 
-            if (fossilValue != -1) {
-                conds.add(new DecoratorCondition(0, fossilValue, fossilValue + 1, 0, 16));
-            }
-
-            if (portalValue != -1) {
-                conds.add(new DecoratorCondition(0, portalValue, portalValue + 4, 0, 16));
-            }
-
-            //conds.add(firstPortal);
-            double[][] locations = DivineHeatmapCalculator.getSuccessProbabilityOfLocations(blockThreshold, conds, SAMPLE_SIZE);
-            heatMap.setIcon(new ImageIcon(DivineHeatmapCalculator.getHeatMapAsImage(locations)));
-
-            double max = 0;
-            for (int i = 0; i < locations.length; i++)
-                for (int j = 0; j < locations[0].length; j++)
-                    max = Math.max(max, locations[i][j]);
-            output.setText("Best Probability " + max);
-        });
-
-
+    private static JPanel makeFirstPortalButtons() {
         JRadioButton north = new JRadioButton("North");
         JRadioButton south = new JRadioButton("South");
         JRadioButton east = new JRadioButton("East");
@@ -236,8 +247,65 @@ public class Main {
         south.addActionListener(e -> {
             portalValue = 0b1100;
         });
+        unknown.setSelected(true);
         unknown.addActionListener(e -> {
             portalValue = -1;
+        });
+
+        JPanel portalButtons = new JPanel();
+        portalButtons.setLayout(new GridLayout(5,1));
+        portalButtons.setBorder(BorderFactory.createTitledBorder("First Portal"));
+
+        portalButtons.add(north);
+        portalButtons.add(south);
+        portalButtons.add(east);
+        portalButtons.add(west);
+        portalButtons.add(unknown);
+
+        return portalButtons;
+    }
+
+    public static void main(String[] args) {
+        JFrame f =new JFrame();
+        f.setSize(SIDE_LENGTH + 50,SIDE_LENGTH + 200);
+
+        FlowLayout flowLayout = new FlowLayout();
+        f.setLayout(flowLayout);
+
+        f.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+
+        JButton jButton = new JButton("Compute Heatmap");
+        //jButton.setSize(75,25);
+        jButton.addActionListener(e -> {
+            ArrayList<Condition> conds = new ArrayList<>();
+            if (treasureX != Integer.MIN_VALUE && treasureZ != Integer.MIN_VALUE) {
+                BuriedTreasureCondition buriedTreasureCondition = new BuriedTreasureCondition(treasureX, treasureZ);
+                conds.add(buriedTreasureCondition);
+            }
+
+            if (fossilValue != -1) {
+                conds.add(new DecoratorCondition(0, fossilValue, fossilValue + 1, 0, 16));
+            }
+
+            if (portalValue != -1) {
+                conds.add(new DecoratorCondition(0, portalValue, portalValue + 4, 0, 16));
+            }
+
+            //conds.add(firstPortal);
+            double[][] locations = DivineHeatmapCalculator.getSuccessProbabilityOfLocations(blockThreshold, conds, sampleSize);
+            heatMap.setIcon(new ImageIcon(DivineHeatmapCalculator.getHeatMapAsImage(locations)));
+
+            double max = 0;
+            int maxX = 0;
+            int maxZ = 0;
+            for (int i = 0; i < locations.length; i++) for (int j = 0; j < locations[0].length; j++) {
+                    if (locations[i][j] > max) {
+                        max = locations[i][j];
+                        maxX = (i - SIZE) * 2;
+                        maxZ = (j - SIZE) * 2;
+                    }
+                }
+            output.setText(String.format("%.3g", max * 100) +"% chance of stronghold within " + blockThreshold + " blocks attained at " + maxX + " " + maxZ);
         });
 
         JButton reset = new JButton("Reset");
@@ -246,26 +314,24 @@ public class Main {
             fossilValue = -1;
             treasureX = Integer.MIN_VALUE;
             treasureZ = Integer.MIN_VALUE;
-            fossil.setText("");
-            xT.setText("");
-            zT.setText("");
+            //fossil.setText("");
+            //xT.setText("");
+            //zT.setText("");
             heatMap.setIcon(new ImageIcon(defaultImage));
-            unknown.setSelected(true);
+            //unknown.setSelected(true);
         });
         reset.setSize(25,125);
 
-        f.add(distance);
+        JPanel userInputs = new JPanel();
+        userInputs.setLayout(new FlowLayout());
         f.add(heatMap);
-        f.add(north);
-        f.add(south);
-        f.add(east);
-        f.add(west);
-        f.add(unknown);
-        f.add(fossil);
-        f.add(xT);
-        f.add(zT);
-        f.add(jButton);
-        f.add(reset);
+        userInputs.add(makeFirstPortalButtons());
+        userInputs.add(makeFossilPanel());
+        userInputs.add(makeTreasurePanel());
+        userInputs.add(makeSettingsPanel());
+        userInputs.add(jButton);
+        userInputs.add(reset);
+        f.add(userInputs);
         f.add(output);
         f.setVisible(true);
     }
