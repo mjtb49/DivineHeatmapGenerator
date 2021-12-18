@@ -200,19 +200,23 @@ public class Main {
         });
 
 
-        JButton north = new JButton("North");
-        JButton south = new JButton("South");
-        JButton east = new JButton("East");
-        JButton west = new JButton("West");
-        JButton unknown = new JButton("Unknown");
-        JButton reset = new JButton("Reset");
+        JRadioButton north = new JRadioButton("North");
+        JRadioButton south = new JRadioButton("South");
+        JRadioButton east = new JRadioButton("East");
+        JRadioButton west = new JRadioButton("West");
+        JRadioButton unknown = new JRadioButton("Unknown");
+        ButtonGroup buttonGroup = new ButtonGroup();
+        buttonGroup.add(north);
+        buttonGroup.add(south);
+        buttonGroup.add(east);
+        buttonGroup.add(west);
+        buttonGroup.add(unknown);
 
         north.setSize(25,125);
         south.setSize(25,125);
         east.setSize(25,125);
         west.setSize(25,125);
         unknown.setSize(25,125);
-        reset.setSize(25,125);
 
         /*
             east  = 00 -> ++
@@ -235,6 +239,8 @@ public class Main {
         unknown.addActionListener(e -> {
             portalValue = -1;
         });
+
+        JButton reset = new JButton("Reset");
         reset.addActionListener(e -> {
             portalValue = -1;
             fossilValue = -1;
@@ -244,7 +250,9 @@ public class Main {
             xT.setText("");
             zT.setText("");
             heatMap.setIcon(new ImageIcon(defaultImage));
+            unknown.setSelected(true);
         });
+        reset.setSize(25,125);
 
         f.add(distance);
         f.add(heatMap);
