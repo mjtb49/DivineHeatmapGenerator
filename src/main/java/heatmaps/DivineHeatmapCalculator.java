@@ -31,21 +31,29 @@ public class DivineHeatmapCalculator {
         return heatMap;
     }
 
-    public static double[][] computeHeatMapAllStrongholds(int sampleSize, ArrayList<Condition> conditions) {
+    public static double[][] computeHeatMapAllStrongholds(int sampleSize, ArrayList<Condition> conditions, int maxNumSeeds) {
         double[][] heatMap = new double[SIDE_LENGTH][SIDE_LENGTH];
-        for (int i = 0; i < sampleSize;) {
+        int total = 0;
+        int successes = 0;
+        while (successes < sampleSize && total < maxNumSeeds && !(total > 1000000 && successes == 0)) {
             long seed = new Random().nextLong();
+            total++;
             if (testConditions(conditions, seed)) {
-                i++;
+                successes++;
                 CPos[] cposes = StrongholdHelper.getFirstThreeStartsNoBiomes(seed);
                 for (CPos cpos : cposes)
                     heatMap[cpos.getX() + SIZE][cpos.getZ() + SIZE] += 1;
             }
         }
 
-        for (int i = 0; i < SIDE_LENGTH; i ++)
-            for (int j = 0; j < SIDE_LENGTH; j ++)
-                heatMap[i][j] /= sampleSize;
+        if (successes != 0) {
+            for (int i = 0; i < SIDE_LENGTH; i++)
+                for (int j = 0; j < SIDE_LENGTH; j++)
+                    heatMap[i][j] /= successes;
+            System.err.println( (successes /(double) total) + " of seeds " + successes + " " + total);
+        } else {
+            System.err.println("No Seeds Found!");
+        }
         return heatMap;
     }
 
@@ -92,8 +100,8 @@ public class DivineHeatmapCalculator {
         return kernel;
     }
 
-    public static double[][] getSuccessProbabilityOfLocations(int blockThreshold, ArrayList<Condition> conds, int sampleSize) {
-        double[][] heatmap = computeHeatMapAllStrongholds(sampleSize, conds);
+    public static double[][] getSuccessProbabilityOfLocations(int blockThreshold, ArrayList<Condition> conds, int sampleSize, int maxNumSeeds) {
+        double[][] heatmap = computeHeatMapAllStrongholds(sampleSize, conds, maxNumSeeds);
         double[][] kernel = makeKernel(blockThreshold);
         //TODO biome pushing is directional, make sure heatmap is correct orientation to do this!!
         heatmap = convolveWithArray(heatmap, StrongholdHelper.getBiomePushDist());

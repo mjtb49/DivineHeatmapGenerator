@@ -17,15 +17,17 @@ public class Main {
     final static int SIZE = 168 + 7;
     final static int SIDE_LENGTH = SIZE * 2 + 1;
     static int sampleSize = 100000;
+    static int maxNumSeeds = 1_000_000_000;
     static int treasureX = Integer.MIN_VALUE;
     static int treasureZ = Integer.MIN_VALUE;
     static int fossilValue = -1;
     static int portalValue = -1;
     static int blockThreshold = 0;
-    static final BufferedImage defaultImage = DivineHeatmapCalculator.getHeatMapAsImage(DivineHeatmapCalculator.getSuccessProbabilityOfLocations(16, new ArrayList<>(), 100000));
+    static final BufferedImage defaultImage = DivineHeatmapCalculator.getHeatMapAsImage(DivineHeatmapCalculator.getSuccessProbabilityOfLocations(16, new ArrayList<>(), sampleSize, maxNumSeeds));
     static JLabel heatMap = new JLabel(new ImageIcon(defaultImage));
     static JLabel output = new JLabel();
-
+    static ArrayList<JTextField> textToReset = new ArrayList<>();
+    static JRadioButton unknownButton;
 
     private static JPanel makeSettingsPanel() {
         JTextField distance = new JTextField("blocks");
@@ -165,6 +167,9 @@ public class Main {
         treasure.add(xT);
         treasure.add(zT);
 
+        textToReset.add(xT);
+        textToReset.add(zT);
+
         return treasure;
     }
 
@@ -206,6 +211,8 @@ public class Main {
         JPanel fossils = new JPanel();
         fossils.setBorder(BorderFactory.createTitledBorder("Fossils"));
         fossils.add(fossil);
+
+        textToReset.add(fossil);
 
         return  fossils;
     }
@@ -262,7 +269,26 @@ public class Main {
         portalButtons.add(west);
         portalButtons.add(unknown);
 
+        unknownButton = unknown;
+
         return portalButtons;
+    }
+
+    private static double[][] makeTheMap() {
+        ArrayList<Condition> conds = new ArrayList<>();
+        if (treasureX != Integer.MIN_VALUE && treasureZ != Integer.MIN_VALUE) {
+            BuriedTreasureCondition buriedTreasureCondition = new BuriedTreasureCondition(treasureX, treasureZ);
+            conds.add(buriedTreasureCondition);
+        }
+
+        if (fossilValue != -1) {
+            conds.add(new DecoratorCondition(0, fossilValue, fossilValue + 1, 0, 16));
+        }
+
+        if (portalValue != -1) {
+            conds.add(new DecoratorCondition(0, portalValue, portalValue + 4, 0, 16));
+        }
+        return DivineHeatmapCalculator.getSuccessProbabilityOfLocations(blockThreshold, conds, sampleSize, maxNumSeeds);
     }
 
     public static void main(String[] args) {
@@ -277,22 +303,9 @@ public class Main {
         JButton jButton = new JButton("Compute Heatmap");
         //jButton.setSize(75,25);
         jButton.addActionListener(e -> {
-            ArrayList<Condition> conds = new ArrayList<>();
-            if (treasureX != Integer.MIN_VALUE && treasureZ != Integer.MIN_VALUE) {
-                BuriedTreasureCondition buriedTreasureCondition = new BuriedTreasureCondition(treasureX, treasureZ);
-                conds.add(buriedTreasureCondition);
-            }
-
-            if (fossilValue != -1) {
-                conds.add(new DecoratorCondition(0, fossilValue, fossilValue + 1, 0, 16));
-            }
-
-            if (portalValue != -1) {
-                conds.add(new DecoratorCondition(0, portalValue, portalValue + 4, 0, 16));
-            }
 
             //conds.add(firstPortal);
-            double[][] locations = DivineHeatmapCalculator.getSuccessProbabilityOfLocations(blockThreshold, conds, sampleSize);
+            double[][] locations = makeTheMap();
             heatMap.setIcon(new ImageIcon(DivineHeatmapCalculator.getHeatMapAsImage(locations)));
 
             double max = 0;
@@ -314,11 +327,11 @@ public class Main {
             fossilValue = -1;
             treasureX = Integer.MIN_VALUE;
             treasureZ = Integer.MIN_VALUE;
-            //fossil.setText("");
-            //xT.setText("");
-            //zT.setText("");
+            for (JTextField textField : textToReset) {
+                textField.setText("");
+            }
             heatMap.setIcon(new ImageIcon(defaultImage));
-            //unknown.setSelected(true);
+            unknownButton.setSelected(true);
         });
         reset.setSize(25,125);
 
