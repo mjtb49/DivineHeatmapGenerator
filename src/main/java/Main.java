@@ -9,6 +9,7 @@ import javax.swing.event.DocumentListener;
 import java.awt.*;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
+import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
@@ -23,7 +24,8 @@ public class Main {
     static int fossilValue = -1;
     static int portalValue = -1;
     static int blockThreshold = 0;
-    static final BufferedImage defaultImage = DivineHeatmapCalculator.getHeatMapAsImage(DivineHeatmapCalculator.getSuccessProbabilityOfLocations(16, new ArrayList<>(), sampleSize, maxNumSeeds));
+    static double[][] probabilities = DivineHeatmapCalculator.getSuccessProbabilityOfLocations(16, new ArrayList<>(), sampleSize, maxNumSeeds);
+    static final BufferedImage defaultImage = DivineHeatmapCalculator.getHeatMapAsImage(probabilities);
     static JLabel heatMap = new JLabel(new ImageIcon(defaultImage));
     static JLabel output = new JLabel();
     static ArrayList<JTextField> textToReset = new ArrayList<>();
@@ -293,7 +295,7 @@ public class Main {
 
     public static void main(String[] args) {
         JFrame f =new JFrame();
-        f.setSize(SIDE_LENGTH + 50,SIDE_LENGTH + 200);
+        f.setSize(SIDE_LENGTH + 400,SIDE_LENGTH + 300);
 
         FlowLayout flowLayout = new FlowLayout();
         f.setLayout(flowLayout);
@@ -305,15 +307,15 @@ public class Main {
         jButton.addActionListener(e -> {
 
             //conds.add(firstPortal);
-            double[][] locations = makeTheMap();
-            heatMap.setIcon(new ImageIcon(DivineHeatmapCalculator.getHeatMapAsImage(locations)));
+            probabilities = makeTheMap();
+            heatMap.setIcon(new ImageIcon(DivineHeatmapCalculator.getHeatMapAsImage(probabilities)));
 
             double max = 0;
             int maxX = 0;
             int maxZ = 0;
-            for (int i = 0; i < locations.length; i++) for (int j = 0; j < locations[0].length; j++) {
-                    if (locations[i][j] > max) {
-                        max = locations[i][j];
+            for (int i = 0; i < probabilities.length; i++) for (int j = 0; j < probabilities[0].length; j++) {
+                    if (probabilities[i][j] > max) {
+                        max = probabilities[i][j];
                         maxX = (i - SIZE) * 2;
                         maxZ = (j - SIZE) * 2;
                     }
@@ -335,6 +337,22 @@ public class Main {
         });
         reset.setSize(25,125);
 
+        heatMap.addMouseMotionListener(new java.awt.event.MouseAdapter() {
+
+            @Override
+            public void mouseMoved(MouseEvent e) {
+                //super.mouseMoved(e);
+                Point location = e.getLocationOnScreen();
+                Point offset = e.getComponent().getLocationOnScreen();
+
+                int x = (location.x - offset.x);
+                int z = (location.y - offset.y);
+                //convert to nether coords
+                heatMap.setToolTipText((x - SIZE)*2 + " " + (z - SIZE)*2 + " " + String.format("%.3g", probabilities[x][z] * 100)+"%");
+            }
+        });
+        ToolTipManager.sharedInstance().setDismissDelay(Integer.MAX_VALUE);
+        ToolTipManager.sharedInstance().setInitialDelay(0);
         JPanel userInputs = new JPanel();
         userInputs.setLayout(new FlowLayout());
         f.add(heatMap);

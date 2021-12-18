@@ -108,6 +108,13 @@ public class DivineHeatmapCalculator {
         return convolveWithArray(heatmap, kernel);
     }
 
+    private static Color computeGradient(double max, double pixel) {
+        int numColors = 8;
+        int divisor = 256 / numColors;
+        int intensity = (int) (255 * pixel / max) / divisor * divisor + 15;
+        return new Color(intensity,intensity,intensity);
+    }
+
     public static BufferedImage getHeatMapAsImage(double[][] weights) {
         BufferedImage image = new BufferedImage(weights.length, weights[0].length, Image.SCALE_DEFAULT);
         double max = 0;
@@ -119,7 +126,7 @@ public class DivineHeatmapCalculator {
 
         for (int i = 0; i < weights.length; i++) {
             for (int j = 0; j < weights[0].length; j++) {
-                Color grayscale = new Color((int) (255 * weights[i][j] / max),(int) (255 * weights[i][j]/ max),(int) (255 * weights[i][j]/ max));
+                Color grayscale = computeGradient(max, weights[i][j]);
                 image.setRGB(i, j, grayscale.getRGB());
             }
         }
