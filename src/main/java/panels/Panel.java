@@ -38,4 +38,11 @@ public interface Panel {
         }  catch (NumberFormatException ignored) {}
         return FAIL;
     }
+
+    static float parseFloatFromTextField(JTextField textField) {
+        try {
+            return Float.parseFloat(textField.getText());
+        }  catch (NumberFormatException ignored) {}
+        return Float.NaN;
+    }
 }

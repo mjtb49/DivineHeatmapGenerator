@@ -21,14 +21,14 @@ public class Main {
     static int maxNumSeeds = 100_000_000;
     static int sampleSize = 100000;
 
-    static double[][] probabilities = DivineHeatmapCalculator.getSuccessProbabilityOfLocations(0, new ArrayList<>(), sampleSize, maxNumSeeds);
+    static double[][] probabilities = DivineHeatmapCalculator.getSuccessProbabilityOfLocations(0, new ArrayList<>(), sampleSize, maxNumSeeds, true);
     static final BufferedImage defaultImage = DivineHeatmapCalculator.getHeatMapAsImage(probabilities);
     static JLabel heatMap = new JLabel(new ImageIcon(defaultImage));
     static JLabel output = new JLabel();
     static ArrayList<Panel> inputs = new ArrayList<>();
     static SettingsPanel settingsPanel;
 
-    private static double[][] makeTheMap() {
+    private static double[][] makeTheMap(boolean useAllThreeStrongholds) {
         ArrayList<Condition> conds = new ArrayList<>();
 
         for (Panel input : inputs) {
@@ -38,7 +38,33 @@ public class Main {
             }
         }
 
-        return DivineHeatmapCalculator.getSuccessProbabilityOfLocations(settingsPanel.getBlockThreshold(), conds, settingsPanel.getSampleSize(), maxNumSeeds);
+        return DivineHeatmapCalculator.getSuccessProbabilityOfLocations(settingsPanel.getBlockThreshold(), conds, settingsPanel.getSampleSize(), maxNumSeeds, useAllThreeStrongholds);
+    }
+
+    private static JButton makeHeatmapButton(boolean threeStrongholds) {
+        JButton jButton = new JButton("Compute Heatmap");
+
+        if (!threeStrongholds)
+            jButton.setText("First Only");
+
+        jButton.addActionListener(e -> {
+            probabilities = makeTheMap(threeStrongholds);
+            heatMap.setIcon(new ImageIcon(DivineHeatmapCalculator.getHeatMapAsImage(probabilities)));
+
+            double max = 0;
+            int maxX = 0;
+            int maxZ = 0;
+            for (int i = 0; i < probabilities.length; i++) for (int j = 0; j < probabilities[0].length; j++) {
+                if (probabilities[i][j] > max) {
+                    max = probabilities[i][j];
+                    maxX = (i - SIZE) * 2;
+                    maxZ = (j - SIZE) * 2;
+                }
+            }
+            output.setText(String.format("%.3g", max * 100) +"% chance of stronghold within " + settingsPanel.getBlockThreshold() + " blocks attained at " + maxX + " " + maxZ);
+        });
+
+        return jButton;
     }
 
 
@@ -48,35 +74,21 @@ public class Main {
         inputs.add(new PortalPanel(1));
         inputs.add(new PortalPanel(2));
         inputs.add(new PortalPanel(3));
+
         inputs.add(new TreasurePanel());
         inputs.add(new TreasurePanel());
         inputs.add(new FossilPanel());
         inputs.add(new BasaltPillarPanel());
         inputs.add(new TreePanel());
+        inputs.add(new AnimalPanel());
+        PanelGroup panelGroup = new PanelGroup(new GridLayout(3,1),new GeneralDecoratorPanel(1),new GeneralDecoratorPanel(2),new GeneralDecoratorPanel(3));
+        inputs.add(panelGroup);
 
         JFrame f =new JFrame();
         f.setSize(SIDE_LENGTH + 400,SIDE_LENGTH + 400);
         FlowLayout flowLayout = new FlowLayout();
         f.setLayout(flowLayout);
         f.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-
-        JButton jButton = new JButton("Compute Heatmap");
-        jButton.addActionListener(e -> {
-            probabilities = makeTheMap();
-            heatMap.setIcon(new ImageIcon(DivineHeatmapCalculator.getHeatMapAsImage(probabilities)));
-
-            double max = 0;
-            int maxX = 0;
-            int maxZ = 0;
-            for (int i = 0; i < probabilities.length; i++) for (int j = 0; j < probabilities[0].length; j++) {
-                    if (probabilities[i][j] > max) {
-                        max = probabilities[i][j];
-                        maxX = (i - SIZE) * 2;
-                        maxZ = (j - SIZE) * 2;
-                    }
-                }
-            output.setText(String.format("%.3g", max * 100) +"% chance of stronghold within " + settingsPanel.getBlockThreshold() + " blocks attained at " + maxX + " " + maxZ);
-        });
 
         JButton reset = new JButton("Reset");
         reset.addActionListener(e -> {
@@ -101,13 +113,17 @@ public class Main {
         ToolTipManager.sharedInstance().setInitialDelay(0);
 
 
-        f.add(settingsPanel);
+        //f.add(settingsPanel);
         for (Panel input : inputs) {
             f.add((JPanel) input);
         }
         f.add(heatMap);
-        f.add(jButton);
-        f.add(reset);
+        JPanel controls = new JPanel(new GridLayout(4,1));
+        controls.add(settingsPanel);
+        controls.add(makeHeatmapButton(true));
+        controls.add(makeHeatmapButton(false));
+        controls.add(reset);
+        f.add(controls);
         f.add(output);
 
         f.setVisible(true);

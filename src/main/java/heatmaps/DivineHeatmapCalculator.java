@@ -14,7 +14,7 @@ public class DivineHeatmapCalculator {
     final static int SIDE_LENGTH = SIZE * 2 + 1;
 
 
-    public static double[][] computeHeatMap(int sampleSize, ArrayList<Condition> conditions) {
+    public static double[][] computeHeatMap(int sampleSize, ArrayList<Condition> conditions, int maxNumStrongholds) {
         double[][] heatMap = new double[SIDE_LENGTH][SIDE_LENGTH];
         for (int i = 0; i < sampleSize;) {
             long seed = new Random().nextLong();
@@ -100,8 +100,8 @@ public class DivineHeatmapCalculator {
         return kernel;
     }
 
-    public static double[][] getSuccessProbabilityOfLocations(int blockThreshold, ArrayList<Condition> conds, int sampleSize, int maxNumSeeds) {
-        double[][] heatmap = computeHeatMapAllStrongholds(sampleSize, conds, maxNumSeeds);
+    public static double[][] getSuccessProbabilityOfLocations(int blockThreshold, ArrayList<Condition> conds, int sampleSize, int maxNumSeeds, boolean useAllThreeStrongholds) {
+        double[][] heatmap = useAllThreeStrongholds ? computeHeatMapAllStrongholds(sampleSize, conds, maxNumSeeds) : computeHeatMap(sampleSize, conds, maxNumSeeds);
         double[][] kernel = makeKernel(blockThreshold);
         //TODO biome pushing is directional, make sure heatmap is correct orientation to do this!!
         heatmap = convolveWithArray(heatmap, StrongholdHelper.getBiomePushDist());
