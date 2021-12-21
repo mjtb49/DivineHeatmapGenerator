@@ -14,12 +14,15 @@ public class DivineHeatmapCalculator {
     final static int SIDE_LENGTH = SIZE * 2 + 1;
 
 
-    public static double[][] computeHeatMap(int sampleSize, ArrayList<Condition> conditions, int maxNumStrongholds) {
+    public static double[][] computeHeatMap(int sampleSize, ArrayList<Condition> conditions, int maxNumSeeds) {
         double[][] heatMap = new double[SIDE_LENGTH][SIDE_LENGTH];
-        for (int i = 0; i < sampleSize;) {
+        int successes = 0;
+        int total = 0;
+        while (successes < sampleSize && total < maxNumSeeds && !((total > maxNumSeeds / 100) && (successes == 0))) {
             long seed = new Random().nextLong();
+            total += 1;
             if (testConditions(conditions, seed)) {
-                i++;
+                successes++;
                 CPos cpos = StrongholdHelper.getFirstStartNoBiomes(seed);
                 heatMap[cpos.getX() + SIZE][cpos.getZ() + SIZE] += 1;
             }
@@ -35,7 +38,7 @@ public class DivineHeatmapCalculator {
         double[][] heatMap = new double[SIDE_LENGTH][SIDE_LENGTH];
         int total = 0;
         int successes = 0;
-        while (successes < sampleSize && total < maxNumSeeds && !(total > 10_000_000 && successes == 0)) {
+        while (successes < sampleSize && total < maxNumSeeds && !(total > maxNumSeeds / 100 && successes == 0)) {
             long seed = new Random().nextLong();
             total++;
             if (testConditions(conditions, seed)) {
