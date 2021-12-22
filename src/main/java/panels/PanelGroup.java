@@ -30,9 +30,11 @@ public class PanelGroup extends JPanel implements Panel {
     public Condition getCondition() {
         ArrayList<Condition> conds = new ArrayList<>();
         for (Panel panel : panels) {
-            conds.add(panel.getCondition());
-            this.add((JPanel) panel);
+            if (panel.getCondition() != null) {
+                conds.add(panel.getCondition());
+                //this.add((JPanel) panel);
+            }
         }
-        return new ConditionGroup(conds);
+        return conds.size() != 0 ? new ConditionGroup(conds) : null;
     }
 }

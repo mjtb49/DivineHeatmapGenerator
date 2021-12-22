@@ -6,6 +6,7 @@ import kaptainwutax.mcutils.util.pos.CPos;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Random;
 
 public class DivineHeatmapCalculator {
@@ -15,9 +16,11 @@ public class DivineHeatmapCalculator {
 
 
     public static double[][] computeHeatMap(int sampleSize, ArrayList<Condition> conditions, int maxNumSeeds) {
+        conditions.sort(Comparator.comparingDouble(Condition::computeRarity));
         double[][] heatMap = new double[SIDE_LENGTH][SIDE_LENGTH];
         int successes = 0;
         int total = 0;
+
         while (successes < sampleSize && total < maxNumSeeds && !((total > maxNumSeeds / 100) && (successes == 0))) {
             long seed = new Random().nextLong();
             total += 1;
@@ -35,6 +38,9 @@ public class DivineHeatmapCalculator {
     }
 
     public static double[][] computeHeatMapAllStrongholds(int sampleSize, ArrayList<Condition> conditions, int maxNumSeeds) {
+
+        //Sort the list so harder conditions come first. may work poorly with Condition Group
+        conditions.sort(Comparator.comparingDouble(Condition::computeRarity));
         double[][] heatMap = new double[SIDE_LENGTH][SIDE_LENGTH];
         int total = 0;
         int successes = 0;
