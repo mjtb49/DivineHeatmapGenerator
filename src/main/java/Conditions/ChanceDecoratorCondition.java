@@ -29,6 +29,11 @@ public class ChanceDecoratorCondition extends DecoratorCondition {
     }
 
     @Override
+    public double computeRarity() {
+        return chance * super.computeRarity();
+    }
+
+    @Override
     public boolean test(long seed) {
         long internalSeed = (seed + salt) ^ 0x5deece66dL;
         //simming a nextFloat

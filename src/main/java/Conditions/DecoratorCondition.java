@@ -47,6 +47,14 @@ public class DecoratorCondition implements Condition {
         return lowerBounds;
     }
 
+    @Override public double computeRarity() {
+        double rarity = 1.0;
+        for (int i = 0; i < lbs.size(); i++) {
+            rarity *= (ubs.get(i) - lbs.get(i)) / (double) (1L << 48);
+        }
+        return rarity;
+    }
+
     @Override
     public boolean test(long seed) {
         long internalSeed = (seed + salt) ^ 0x5deece66dL;

@@ -13,6 +13,15 @@ public class ConditionGroup implements Condition {
     }
 
     @Override
+    public double computeRarity() {
+        double rarity = 1.0d;
+        for(Condition condition : conditions) {
+            rarity *= condition.computeRarity();
+        }
+        return rarity;
+    }
+
+    @Override
     public boolean test(long seed) {
         for (Condition condition : conditions) {
             if (!condition.test(seed)) {

@@ -10,6 +10,10 @@ public class CountDecoratorCondition extends DecoratorCondition {
         this.count = count;
     }
 
+    @Override public double computeRarity() {
+        return 1 - Math.pow(1 - super.computeRarity(), count);
+    }
+
     @Override
     public boolean test(long seed) {
         long internalSeed = (seed + salt) ^ 0x5deece66dL;
