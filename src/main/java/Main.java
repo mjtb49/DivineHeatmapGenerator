@@ -4,11 +4,7 @@ import panels.*;
 import panels.Panel;
 
 import javax.swing.*;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
 import java.awt.*;
-import java.awt.event.FocusAdapter;
-import java.awt.event.FocusEvent;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
@@ -69,7 +65,6 @@ public class Main {
 
 
     public static void main(String[] args) {
-
         settingsPanel = new SettingsPanel();
         inputs.add(new PortalPanel(1));
         inputs.add(new PortalPanel(2));
