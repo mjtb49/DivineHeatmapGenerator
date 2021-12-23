@@ -74,7 +74,7 @@ public class DivineHeatmapCalculator {
         return true;
     }
 
-    public static double[][] convolveWithArray(double[][] data, double[][] kernel) {
+    public static double[][] convolve(double[][] data, double[][] kernel) {
         double[][] result =  new double[data.length][data[0].length];
         if (kernel.length % 2 == 0 || kernel[0].length % 2 == 0)
             System.err.println("Kernel not of odd width");
@@ -113,12 +113,15 @@ public class DivineHeatmapCalculator {
         double[][] heatmap = useAllThreeStrongholds ? computeHeatMapAllStrongholds(sampleSize, conds, maxNumSeeds) : computeHeatMap(sampleSize, conds, maxNumSeeds);
         double[][] kernel = makeKernel(blockThreshold);
         //TODO biome pushing is directional, make sure heatmap is correct orientation to do this!!
-        heatmap = convolveWithArray(heatmap, StrongholdHelper.getBiomePushDist());
-        return convolveWithArray(heatmap, kernel);
+
+        heatmap = FFTHelper.convolve(heatmap, StrongholdHelper.getBiomePushDist(), true);
+        return FFTHelper.convolve(heatmap, kernel, true);
+        //heatmap = convolve(heatmap, StrongholdHelper.getBiomePushDist());
+        //return convolve(heatmap, kernel);
     }
 
     private static Color computeGradient(double max, double pixel) {
-        int numColors = 255;
+        int numColors = 256;
         int divisor = 256 / numColors;
         int intensity = (int) (255 * pixel / max) / divisor * divisor;
         return new Color(intensity,intensity,intensity);

@@ -19,6 +19,7 @@ repositories {
     }
 }
 dependencies {
+    compile "com.github.wendykierp:JTransforms:3.1"
     testCompile group: 'junit', name: 'junit', version: '4.12'
     implementation 'com.github.hube12:SEED:645bd5bf5fbf34bd4a009619936b7a8e0d43302f'
 }
