@@ -4,6 +4,8 @@ import org.jtransforms.fft.DoubleFFT_2D;
 
 public class FFTHelper {
 
+    private static final double EPSILON = 1e-10;
+
     /**
      * Convert an array of real numbers to an array of complex numbers in the form wanted by this fft library
      * @param realArray the matrix to convert
@@ -57,7 +59,14 @@ public class FFTHelper {
 
         for (int i = 0; i < realOutput.length; i++) {
             for (int j = 0; j < realOutput[0].length; j += 1) {
-                realOutput[i][j] = complexOutput[i + dx][(j + dy) * 2];
+                double val = complexOutput[i + dx][(j + dy) * 2];
+
+                if (Math.abs(val) < EPSILON)
+                    val = 0;
+                if (val < 0)
+                    System.err.println("Illegal value in array " + val);
+
+                realOutput[i][j] = val;
                 if (Math.abs(complexOutput[i + dx][(j + dy) * 2 + 1]) > 0.00000000000001D) {
                     System.err.println("uh oh");
                 }
