@@ -64,15 +64,14 @@ public class FFTHelper {
                 if (Math.abs(val) < EPSILON)
                     val = 0;
                 if (val < 0)
-                    System.err.println("Illegal value in array " + val);
+                    System.err.println("Illegal negative value in FFT result " + val);
 
                 realOutput[i][j] = val;
-                if (Math.abs(complexOutput[i + dx][(j + dy) * 2 + 1]) > 0.00000000000001D) {
-                    System.err.println("uh oh");
+                if (Math.abs(complexOutput[i + dx][(j + dy) * 2 + 1]) > EPSILON) {
+                    System.err.println("Large imaginary part in FFT");
                 }
             }
         }
-        System.out.println("done");
         return realOutput;
     }
 }
