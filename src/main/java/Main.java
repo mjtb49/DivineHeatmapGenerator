@@ -119,6 +119,17 @@ public class Main {
         inputs.add(new BasaltPillarPanel());
         inputs.add(new TreePanel());
         inputs.add(new AnimalPanel());
+        inputs.add(new DecoratorPanel("Pumpkin", 80007).chance(1/32.0f).call("x",true).call("z"));
+        inputs.add(new DecoratorPanel("Iceberg", 20000).chance(1/16.0f).call("x",true).call("z"));
+        inputs.add(new DecoratorPanel("Blue Iceberg", 20001).chance(1/200.0f).call("x",true).call("z"));
+        inputs.add(new DecoratorPanel("Desert Well", 40000).chance(1/1000.0f).call("x",16,true).call("z",16));
+        inputs.add(new DecoratorPanel("Sea Pickle", 80011).chance(1/16.0f).call("x",true).call("z"));
+        inputs.add(new DecoratorPanel("Brown Mushroom", 80001).chance(1/4.0f).call("x",true).call("z"));
+        inputs.add(new DecoratorPanel("Red Mushroom", 80002).chance(1/8.0f).call("x",true).call("z"));
+        inputs.add(new DecoratorPanel("Gravel Patch", 60013).call("x",16).call("z",16,true).call("rad",4));
+        inputs.add(new DecoratorPanel("Clay (Swamp)", 60011).call("x",16).call("z",16,true).call("rad",2));
+        inputs.add(new DecoratorPanel("Clay (Other)", 60012).call("x",16).call("z",16,true).call("rad",2));
+
         PanelGroup panelGroup = new PanelGroup(new GridLayout(3,1),new GeneralDecoratorPanel(1),new GeneralDecoratorPanel(2),new GeneralDecoratorPanel(3));
         inputs.add(panelGroup);
 
