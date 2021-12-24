@@ -74,4 +74,25 @@ public class FFTHelper {
         }
         return realOutput;
     }
+
+    public static double[][] convolveLikeASanePerson(double[][] data, double[][] kernel) {
+        double[][] result =  new double[data.length][data[0].length];
+        if (kernel.length % 2 == 0 || kernel[0].length % 2 == 0)
+            System.err.println("Kernel not of odd width");
+        int xCenter = kernel.length / 2;
+        int zCenter = kernel[0].length / 2;
+        for (int dRow = 0; dRow < data.length; dRow++) {
+            for (int dCol = 0; dCol < data[0].length; dCol++) {
+                for (int kRow = 0; kRow < kernel.length; kRow++) {
+                    for (int kCol = 0; kCol < kernel[0].length; kCol++) {
+                        int x = dRow + kRow - xCenter;
+                        int z = dCol + kCol - zCenter;
+                        if (x >= 0 && x < data.length && z >= 0 && z < data[0].length)
+                            result[x][z] += kernel[kRow][kCol] * data[dRow][dCol];
+                    }
+                }
+            }
+        }
+        return result;
+    }
 }

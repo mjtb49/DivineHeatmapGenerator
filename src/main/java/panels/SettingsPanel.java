@@ -6,6 +6,8 @@ import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import java.awt.*;
+import java.util.Arrays;
+
 
 public class SettingsPanel extends JPanel implements Panel {
 
@@ -14,7 +16,7 @@ public class SettingsPanel extends JPanel implements Panel {
 
     public SettingsPanel() {
         distance = new JTextField("Blocks");
-        distance.setColumns(10);
+        distance.setColumns(4);
         Panel.deleteTextOnSelection(distance);
 
         samples = new JTextField("Trials");
@@ -34,8 +36,13 @@ public class SettingsPanel extends JPanel implements Panel {
 
     public int getBlockThreshold() {
         int d = Panel.parseIntFromTextField(distance);
-        if (Panel.parseIntFromTextField(distance) != Panel.FAIL)
-            return d;
+        if (Panel.parseIntFromTextField(distance) != Panel.FAIL) {
+            if (Panel.parseIntFromTextField(distance) <= 2000) {
+                return d;
+            } else {
+                return 2000;
+            }
+        }
         return 0;
     }
 
@@ -45,6 +52,11 @@ public class SettingsPanel extends JPanel implements Panel {
             return d;
         return 100000;
     }
+
+    public JTextField getDistanceField() {
+        return distance;
+    }
+
     @Override //TODO this is stupid
     public Condition getCondition() {
         return null;

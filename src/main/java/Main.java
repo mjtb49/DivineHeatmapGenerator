@@ -4,10 +4,13 @@ import panels.*;
 import panels.Panel;
 
 import javax.swing.*;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class Main {
 
@@ -17,12 +20,19 @@ public class Main {
     static int maxNumSeeds = 100_000_000;
     static int sampleSize = 100000;
 
-    static double[][] probabilities = DivineHeatmapCalculator.getSuccessProbabilityOfLocations(0, new ArrayList<>(), sampleSize, maxNumSeeds, true);
+    static double[][] startProbabilities = DivineHeatmapCalculator.getStartDistributions(new ArrayList<>(), sampleSize, maxNumSeeds, true);
+    static double[][] probabilities = startProbabilities;
     static final BufferedImage defaultImage = DivineHeatmapCalculator.getHeatMapAsImage(probabilities);
     static JLabel heatMap = new JLabel(new ImageIcon(defaultImage));
     static JLabel output = new JLabel();
     static ArrayList<Panel> inputs = new ArrayList<>();
     static SettingsPanel settingsPanel;
+
+
+    public static void updateHeatmapToNewStart() {
+        probabilities = DivineHeatmapCalculator.getPlayerPreferences(startProbabilities, settingsPanel.getBlockThreshold());
+        heatMap.setIcon(new ImageIcon(DivineHeatmapCalculator.getHeatMapAsImage(probabilities)));
+    }
 
     private static double[][] makeTheMap(boolean useAllThreeStrongholds) {
         ArrayList<Condition> conds = new ArrayList<>();
@@ -33,20 +43,19 @@ public class Main {
                 System.out.println(input);
             }
         }
-
-        return DivineHeatmapCalculator.getSuccessProbabilityOfLocations(settingsPanel.getBlockThreshold(), conds, settingsPanel.getSampleSize(), maxNumSeeds, useAllThreeStrongholds);
+        startProbabilities = DivineHeatmapCalculator.getStartDistributions(conds, settingsPanel.getSampleSize(), maxNumSeeds, useAllThreeStrongholds);
+        probabilities = DivineHeatmapCalculator.getPlayerPreferences(startProbabilities, settingsPanel.getBlockThreshold());
+        return probabilities;
     }
 
     private static JButton makeHeatmapButton(boolean threeStrongholds) {
         JButton jButton = new JButton("Compute Heatmap");
-
         if (!threeStrongholds)
             jButton.setText("First Only");
 
         jButton.addActionListener(e -> {
             probabilities = makeTheMap(threeStrongholds);
             heatMap.setIcon(new ImageIcon(DivineHeatmapCalculator.getHeatMapAsImage(probabilities)));
-
             double max = 0;
             int maxX = 0;
             int maxZ = 0;
@@ -66,10 +75,44 @@ public class Main {
 
     public static void main(String[] args) {
         settingsPanel = new SettingsPanel();
+
+        settingsPanel.getDistanceField().getDocument().addDocumentListener(new DocumentListener() {
+            public void changedUpdate(DocumentEvent e) {
+                warn();
+            }
+            public void removeUpdate(DocumentEvent e) {
+                warn();
+            }
+            public void insertUpdate(DocumentEvent e) {
+                warn();
+            }
+
+            public void warn() {
+                try {
+                    if (Integer.parseInt(settingsPanel.getDistanceField().getText())>=0) {
+                        updateHeatmapToNewStart();
+                        double max = 0;
+                        int maxX = 0;
+                        int maxZ = 0;
+                        for (int i = 0; i < probabilities.length; i++) for (int j = 0; j < probabilities[0].length; j++) {
+                            if (probabilities[i][j] > max) {
+                                max = probabilities[i][j];
+                                maxX = (i - SIZE) * 2;
+                                maxZ = (j - SIZE) * 2;
+                            }
+                        }
+                        output.setText(String.format("%.3g", max * 100) +"% chance of stronghold within " + settingsPanel.getBlockThreshold() + " blocks attained at " + maxX + " " + maxZ);
+                    }
+                } catch (NumberFormatException nfe) {
+                    System.err.println(Arrays.toString(nfe.getStackTrace()));
+                }
+            }
+        });
+
+
         inputs.add(new PortalPanel(1));
         inputs.add(new PortalPanel(2));
         inputs.add(new PortalPanel(3));
-
         inputs.add(new TreasurePanel());
         inputs.add(new TreasurePanel());
         inputs.add(new FossilPanel());
@@ -107,8 +150,6 @@ public class Main {
         ToolTipManager.sharedInstance().setDismissDelay(Integer.MAX_VALUE);
         ToolTipManager.sharedInstance().setInitialDelay(0);
 
-
-        //f.add(settingsPanel);
         for (Panel input : inputs) {
             f.add((JPanel) input);
         }

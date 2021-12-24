@@ -74,27 +74,6 @@ public class DivineHeatmapCalculator {
         return true;
     }
 
-    public static double[][] convolve(double[][] data, double[][] kernel) {
-        double[][] result =  new double[data.length][data[0].length];
-        if (kernel.length % 2 == 0 || kernel[0].length % 2 == 0)
-            System.err.println("Kernel not of odd width");
-        int xCenter = kernel.length / 2;
-        int zCenter = kernel[0].length / 2;
-        for (int dRow = 0; dRow < data.length; dRow++) {
-            for (int dCol = 0; dCol < data[0].length; dCol++) {
-                for (int kRow = 0; kRow < kernel.length; kRow++) {
-                    for (int kCol = 0; kCol < kernel[0].length; kCol++) {
-                        int x = dRow + kRow - xCenter;
-                        int z = dCol + kCol - zCenter;
-                        if (x >= 0 && x < data.length && z >= 0 && z < data[0].length)
-                            result[x][z] += kernel[kRow][kCol] * data[dRow][dCol];
-                    }
-                }
-            }
-        }
-        return result;
-    }
-
     static public double[][] makeKernel(int blockThreshold) {
         int threshold = blockThreshold / 16;
         int maxDSq = blockThreshold * blockThreshold / 256;
@@ -109,15 +88,14 @@ public class DivineHeatmapCalculator {
         return kernel;
     }
 
-    public static double[][] getSuccessProbabilityOfLocations(int blockThreshold, ArrayList<Condition> conds, int sampleSize, int maxNumSeeds, boolean useAllThreeStrongholds) {
+    public static double[][] getStartDistributions(ArrayList<Condition> conds, int sampleSize, int maxNumSeeds, boolean useAllThreeStrongholds) {
         double[][] heatmap = useAllThreeStrongholds ? computeHeatMapAllStrongholds(sampleSize, conds, maxNumSeeds) : computeHeatMap(sampleSize, conds, maxNumSeeds);
-        double[][] kernel = makeKernel(blockThreshold);
         //TODO biome pushing is directional, make sure heatmap is correct orientation to do this!!
+        return FFTHelper.convolve(heatmap, StrongholdHelper.getBiomePushDist(), true);
+    }
 
-        heatmap = FFTHelper.convolve(heatmap, StrongholdHelper.getBiomePushDist(), true);
-        return FFTHelper.convolve(heatmap, kernel, true);
-        //heatmap = convolve(heatmap, StrongholdHelper.getBiomePushDist());
-        //return convolve(heatmap, kernel);
+    public static double[][] getPlayerPreferences(double[][] heatmap, int threshold) {
+        return FFTHelper.convolve(heatmap, makeKernel(threshold), true);
     }
 
     private static Color computeGradient(double max, double pixel) {
