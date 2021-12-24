@@ -45,7 +45,7 @@ public class DivineHeatmapCalculator {
         int total = 0;
         int successes = 0;
         while (successes < sampleSize && total < maxNumSeeds && !(total > maxNumSeeds / 100 && successes == 0)) {
-            long seed = new Random().nextLong();
+            long seed = new Random().nextLong() + 1; //+1 technically slow but prevents this from seed cracking even in theory
             total++;
             if (testConditions(conditions, seed)) {
                 successes++;
