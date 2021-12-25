@@ -174,8 +174,12 @@ public class Main {
         controls.add(makeHeatmapButton(false));
         controls.add(reset);
         f.add(controls);
-        f.add(output);
-        f.add(debug);
+
+        JPanel textOuputs = new JPanel(new GridLayout(2,1));
+        textOuputs.add(output);
+        textOuputs.add(debug);
+
+        f.add(textOuputs);
 
         f.setVisible(true);
     }

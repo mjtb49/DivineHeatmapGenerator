@@ -68,7 +68,7 @@ public class DivineHeatmapCalculator {
             float predictedRarity = 1.0f;
             for (Condition condition : conditions)
                 predictedRarity *= condition.computeRarity();
-            debugString = successes /(double) total + " of seeds, found on " + successes + " out of " + total + ". Predicted was " + predictedRarity + " ratio of " + predictedRarity/(successes /(double) total);
+            debugString = "Found on " + successes + " out of " + total + " seeds, predicted was " + predictedRarity + ". Predicted to actual ratio of " + predictedRarity/(successes /(double) total);
         } else {
             debugString = "No Seeds Found";
         }
