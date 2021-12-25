@@ -13,7 +13,7 @@ public class DecoratorPanel extends JPanel implements Panel {
 
     private final int salt;
     private float chance;
-    private JRadioButton button = null;
+    private JCheckBox button = null;
     private final ArrayList<JTextField> measurements = new ArrayList<>();
     private final ArrayList<JTextField> precisions = new ArrayList<>();
     private final ArrayList<String> measurementNames = new ArrayList<>();
@@ -26,7 +26,7 @@ public class DecoratorPanel extends JPanel implements Panel {
 
     public DecoratorPanel chance(float f) {
         this.chance = f;
-        this.button = new JRadioButton("Exists");
+        this.button = new JCheckBox("Exists");
         this.add(button);
         return this;
     }

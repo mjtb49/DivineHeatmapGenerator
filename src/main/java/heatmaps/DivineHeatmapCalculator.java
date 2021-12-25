@@ -13,7 +13,7 @@ public class DivineHeatmapCalculator {
 
     final static int SIZE = 168 + 7;
     final static int SIDE_LENGTH = SIZE * 2 + 1;
-
+    private static String debugString = "";
 
     public static double[][] computeHeatMap(int sampleSize, ArrayList<Condition> conditions, int maxNumSeeds) {
         conditions.sort(Comparator.comparingDouble(Condition::computeRarity));
@@ -37,6 +37,10 @@ public class DivineHeatmapCalculator {
         return heatMap;
     }
 
+    public static String getDebugString() {
+        return debugString;
+    }
+
     public static double[][] computeHeatMapAllStrongholds(int sampleSize, ArrayList<Condition> conditions, int maxNumSeeds) {
 
         //Sort the list so harder conditions come first. may work poorly with Condition Group
@@ -56,12 +60,17 @@ public class DivineHeatmapCalculator {
         }
 
         if (successes != 0) {
-            for (int i = 0; i < SIDE_LENGTH; i++)
-                for (int j = 0; j < SIDE_LENGTH; j++)
+            for (int i = 0; i < SIDE_LENGTH; i++) {
+                for (int j = 0; j < SIDE_LENGTH; j++) {
                     heatMap[i][j] /= successes;
-            System.err.println( (successes /(double) total) + " of seeds " + successes + " " + total);
+                }
+            }
+            float predictedRarity = 1.0f;
+            for (Condition condition : conditions)
+                predictedRarity *= condition.computeRarity();
+            debugString = successes /(double) total + " of seeds, found on " + successes + " out of " + total + ". Predicted was " + predictedRarity + " ratio of " + predictedRarity/(successes /(double) total);
         } else {
-            System.err.println("No Seeds Found!");
+            debugString = "No Seeds Found";
         }
         return heatMap;
     }

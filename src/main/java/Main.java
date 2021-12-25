@@ -25,6 +25,7 @@ public class Main {
     static final BufferedImage defaultImage = DivineHeatmapCalculator.getHeatMapAsImage(probabilities);
     static JLabel heatMap = new JLabel(new ImageIcon(defaultImage));
     static JLabel output = new JLabel();
+    static JLabel debug = new JLabel();
     static ArrayList<Panel> inputs = new ArrayList<>();
     static SettingsPanel settingsPanel;
 
@@ -67,6 +68,7 @@ public class Main {
                 }
             }
             output.setText(String.format("%.3g", max * 100) +"% chance of stronghold within " + settingsPanel.getBlockThreshold() + " blocks attained at " + maxX + " " + maxZ);
+            debug.setText(DivineHeatmapCalculator.getDebugString());
         });
 
         return jButton;
@@ -102,6 +104,7 @@ public class Main {
                             }
                         }
                         output.setText(String.format("%.3g", max * 100) +"% chance of stronghold within " + settingsPanel.getBlockThreshold() + " blocks attained at " + maxX + " " + maxZ);
+                        debug.setText(DivineHeatmapCalculator.getDebugString());
                     }
                 } catch (NumberFormatException nfe) {
                     System.err.println(Arrays.toString(nfe.getStackTrace()));
@@ -172,6 +175,7 @@ public class Main {
         controls.add(reset);
         f.add(controls);
         f.add(output);
+        f.add(debug);
 
         f.setVisible(true);
     }
