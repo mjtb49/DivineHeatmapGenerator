@@ -40,7 +40,7 @@ public class FortressPanel extends JPanel implements Panel {
         int x = Panel.parseIntFromTextField(xT);
         int z = Panel.parseIntFromTextField(zT);
         if (x != Panel.FAIL && z != Panel.FAIL) {
-            if (((x & 0xfL) - 4 < 8) && ((z & 0xfL) - 4 < 8))
+            if ((((x - 4) & 0xfL) < 8) && (((z - 4) & 0xfL) < 8))
                 return new FortressCondition(x, z);
         }
 
