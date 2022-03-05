@@ -65,4 +65,8 @@ public class DecoratorCondition implements Condition {
         }
         return true;
     }
+
+    public long getSalt() {
+        return salt;
+    }
 }
