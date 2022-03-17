@@ -39,7 +39,7 @@ public class FossilPanel extends JPanel implements Panel {
     }
 
     @Override
-    public Condition getCondition() {
+    public Condition getCondition(boolean crossReference) {
         int fossilValue = Panel.parseIntFromTextField(fossil, 0, 16);
         int fossilZValue = Panel.parseIntFromTextField(fossilZ, 0, 16);
 

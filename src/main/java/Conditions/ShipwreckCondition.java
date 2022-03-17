@@ -7,21 +7,25 @@ public class ShipwreckCondition extends DecoratorCondition {
     final static long shipwreckSalt = 165745295L;
     final static long seedOffset = 1L << (48 - 3);
 
-    public ShipwreckCondition(int x, int z) {
-        super(getRegionSalt(x,z),getLowerBounds(x,z), getUpperBounds(x,z));
+    public ShipwreckCondition(int x, int z, boolean crossReference) {
+        super(getRegionSalt(x,z),getLowerBounds(x,z, crossReference), getUpperBounds(x,z, crossReference));
     }
 
-    private static ArrayList<Long> getLowerBounds(int x, int z) {
+    private static ArrayList<Long> getLowerBounds(int x, int z, boolean crossReference) {
         //TODO add in a condition for z and add error handling
         ArrayList<Long> retval = new ArrayList<>();
         retval.add(seedOffset * (x & 0x7));
+        if (crossReference)
+            retval.add(seedOffset * (z & 0x7));
         return retval;
     }
 
-    private static ArrayList<Long> getUpperBounds(int x, int z) {
+    private static ArrayList<Long> getUpperBounds(int x, int z, boolean crossReference) {
         //TODO add in a condition for z and add error handling
         ArrayList<Long> retval = new ArrayList<>();
         retval.add((seedOffset) * (1 + (x & 0x7)) - 1);
+        if (crossReference)
+            retval.add((seedOffset) * (1 + (z & 0x7)) - 1);
         return retval;
     }
 

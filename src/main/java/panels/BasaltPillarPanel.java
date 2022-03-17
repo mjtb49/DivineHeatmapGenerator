@@ -42,7 +42,7 @@ public class BasaltPillarPanel extends JPanel implements Panel {
     }
 
     @Override
-    public Condition getCondition() {
+    public Condition getCondition(boolean crossReference) {
 
         int basaltX = Panel.parseIntFromTextField(xB);
         int basaltY = Panel.parseIntFromTextField(yB);

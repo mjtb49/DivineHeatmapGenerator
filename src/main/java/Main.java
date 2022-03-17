@@ -37,10 +37,10 @@ public class Main {
 
     private static double[][] makeTheMap(boolean useAllThreeStrongholds) {
         ArrayList<Condition> conds = new ArrayList<>();
-
+        boolean cross = settingsPanel.shouldCrossReference();
         for (Panel input : inputs) {
-            if (input.getCondition() != null) {
-                conds.add(input.getCondition());
+            if (input.getCondition(cross) != null) {
+                conds.add(input.getCondition(cross));
                 System.out.println(input);
             }
         }
@@ -76,7 +76,7 @@ public class Main {
 
 
     public static void main(String[] args) {
-        settingsPanel = new SettingsPanel();
+        settingsPanel = new SettingsPanel(false);
 
         settingsPanel.getDistanceField().getDocument().addDocumentListener(new DocumentListener() {
             public void changedUpdate(DocumentEvent e) {

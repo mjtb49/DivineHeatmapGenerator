@@ -191,7 +191,7 @@ public class AnimalPanel extends JPanel implements Panel {
     }
 
     @Override
-    public Condition getCondition() {
+    public Condition getCondition(boolean crossReference) {
         if (animal == Animal.NONE)
             return null;
 

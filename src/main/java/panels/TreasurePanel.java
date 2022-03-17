@@ -34,7 +34,7 @@ public class TreasurePanel extends JPanel implements Panel {
     }
 
     @Override
-    public Condition getCondition() {
+    public Condition getCondition(boolean crossReference) {
 
         int x = Panel.parseIntFromTextField(xT);
         int z = Panel.parseIntFromTextField(zT);

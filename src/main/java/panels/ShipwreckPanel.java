@@ -35,13 +35,13 @@ public class ShipwreckPanel extends JPanel implements Panel {
     }
 
     @Override
-    public Condition getCondition() {
+    public Condition getCondition(boolean crossReference) {
 
         int x = Panel.parseIntFromTextField(xT);
         int z = Panel.parseIntFromTextField(zT);
         if (x != Panel.FAIL && z != Panel.FAIL) {
             if (((x & 0xfL) < 8) && ((z & 0xfL) < 8))
-                return new ShipwreckCondition(x, z);
+                return new ShipwreckCondition(x, z, crossReference);
         }
 
         return null;

@@ -13,8 +13,9 @@ public class SettingsPanel extends JPanel implements Panel {
 
     private JTextField distance;
     private JTextField samples;
+    private JCheckBox cross;
 
-    public SettingsPanel() {
+    public SettingsPanel(boolean crossRefCheckbox) {
         distance = new JTextField("Blocks");
         distance.setColumns(4);
         Panel.deleteTextOnSelection(distance);
@@ -23,10 +24,18 @@ public class SettingsPanel extends JPanel implements Panel {
         samples.setColumns(10);
         Panel.deleteTextOnSelection(samples);
 
-        this.setLayout(new GridLayout(2,1));
+        if (crossRefCheckbox)
+            this.setLayout(new GridLayout(3,1));
+        else
+            this.setLayout(new GridLayout(2,1));
         this.setBorder(BorderFactory.createTitledBorder("Settings"));
         this.add(distance);
         this.add(samples);
+
+        if (crossRefCheckbox) {
+            cross = new JCheckBox("Cross ref.");
+            this.add(cross);
+        }
     }
 
     @Override
@@ -57,8 +66,12 @@ public class SettingsPanel extends JPanel implements Panel {
         return distance;
     }
 
+    public boolean shouldCrossReference() {
+        return cross == null || cross.isSelected();
+    }
+
     @Override //TODO this is stupid
-    public Condition getCondition() {
+    public Condition getCondition(boolean crossReference) {
         return null;
     }
 }

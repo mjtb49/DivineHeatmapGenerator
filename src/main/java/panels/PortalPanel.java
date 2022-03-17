@@ -69,7 +69,7 @@ public class PortalPanel extends JPanel implements Panel{
     }
 
     @Override
-    public Condition getCondition() {
+    public Condition getCondition(boolean crossReference) {
         if (portalValue != Panel.FAIL) {
             ArrayList<Long> lowerBounds = new ArrayList<>();
             ArrayList<Long> upperBounds = new ArrayList<>();

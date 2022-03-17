@@ -10,7 +10,7 @@ import java.awt.event.FocusEvent;
 
 public interface Panel {
     void reset();
-    Condition getCondition();
+    Condition getCondition(boolean crossReference);
     static final int FAIL = Integer.MIN_VALUE;
 
     static void deleteTextOnSelection(JTextField jTextField) {

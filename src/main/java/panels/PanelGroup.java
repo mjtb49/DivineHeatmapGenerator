@@ -27,11 +27,11 @@ public class PanelGroup extends JPanel implements Panel {
     }
 
     @Override
-    public Condition getCondition() {
+    public Condition getCondition(boolean crossReference) {
         ArrayList<Condition> conds = new ArrayList<>();
         for (Panel panel : panels) {
-            if (panel.getCondition() != null) {
-                conds.add(panel.getCondition());
+            if (panel.getCondition(crossReference) != null) {
+                conds.add(panel.getCondition(crossReference));
                 //this.add((JPanel) panel);
             }
         }

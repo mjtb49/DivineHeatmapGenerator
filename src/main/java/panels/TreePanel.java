@@ -95,7 +95,7 @@ public class TreePanel extends JPanel implements Panel {
     }
 
     @Override
-    public Condition getCondition() {
+    public Condition getCondition(boolean crossReference) {
         int x = Panel.parseIntFromTextField(treeXField, 0, 16);
         int z = Panel.parseIntFromTextField(treeZField, 0, 16);
 

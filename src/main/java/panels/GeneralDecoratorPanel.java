@@ -96,7 +96,7 @@ public class GeneralDecoratorPanel extends JPanel implements Panel {
     }
 
     @Override
-    public Condition getCondition() {
+    public Condition getCondition(boolean crossReference) {
         int salt = Panel.parseIntFromTextField(saltField);
         if (salt == Panel.FAIL)
             return null;

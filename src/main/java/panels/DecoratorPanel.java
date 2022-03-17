@@ -106,7 +106,7 @@ public class DecoratorPanel extends JPanel implements Panel {
     }
 
     @Override
-    public Condition getCondition() {
+    public Condition getCondition(boolean crossReference) {
         //If its a chance decorator, return null if it doesn't exist
         if (button != null && !button.isSelected())
             return null;
